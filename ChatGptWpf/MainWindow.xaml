@@ -1,0 +1,28 @@
+﻿<Window x:Class="ChatGptWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:local="clr-namespace:ChatGptWpf"
+        mc:Ignorable="d"
+        materialDesign:ThemeAssist.Theme="Light"
+        Title="ChatGPT" Height="450" Width="550">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10">
+            <TextBox  Height="40" AcceptsReturn="True" AcceptsTab="True"  materialDesign:TextBlockAssist.AutoToolTip="True" 
+                      
+                      x:Name="txtPrompt" Width="381" Margin="10"  VerticalAlignment="Center"/>
+            <Button  x:Name="btnGenerate" Content="Generate" Margin="10" VerticalAlignment="Center" Click="btnGenerate_Click"/>
+        </StackPanel>
+        <materialDesign:Card Grid.Row="1">
+            <ScrollViewer  Margin="10">
+                <TextBlock x:Name="txtGeneratedText" TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </materialDesign:Card>
+    </Grid>
+</Window>
