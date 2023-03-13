@@ -22,13 +22,15 @@ namespace ChatGptWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string API_KEY = "YOUR API KEY GOES HERE";
-        private const string MODEL_ID = "text-davinci-002";
+        private const string API_KEY = "YOUR_API_KEY";
+        private const string MODEL_ID = "gpt-3.5-turbo";
 
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        private List<Message> messagesSoFar = new();
 
         private async void btnGenerate_Click(object sender, RoutedEventArgs e)
         {
@@ -39,23 +41,27 @@ namespace ChatGptWpf
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", API_KEY);
 
                 // Set up the request body with the user's prompt and other parameters
+                messagesSoFar.Add(new(){content = txtPrompt.Text,role = "user"});
                 var requestBody = new
                 {
                     model = MODEL_ID,
-                    prompt = txtPrompt.Text,
-                    max_tokens = 2000,
-                    temperature = 0.5
+                    messages = messagesSoFar
                 };
                 var requestBodyJson = JsonSerializer.Serialize(requestBody);
                 var content = new StringContent(requestBodyJson, System.Text.Encoding.UTF8, "application/json");
 
                 // Send the request to the OpenAI API and parse the response
-                var response = await client.PostAsync("https://api.openai.com/v1/completions", content);
+                var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", content);
                 var responseJson = await response.Content.ReadAsStringAsync();
                 var responseObject = JsonSerializer.Deserialize<CompletionResponse>(responseJson);
 
                 // Display the generated text in the text block
-                txtGeneratedText.Text = responseObject.choices[0].text;
+                var responseChoice = responseObject?.choices.FirstOrDefault();
+                var responseMessage = responseChoice?.message;
+
+                txtGeneratedText.Text = responseMessage?.content ?? "";
+                if(responseMessage != null)
+                    messagesSoFar.Add(responseMessage);
             }
             catch (Exception ex)
             {
@@ -64,16 +70,29 @@ namespace ChatGptWpf
             }
         }
 
-        private class CompletionResponse
-        {
-            public Choice[] choices { get; set; }
-        }
+        
+    }
 
-        private class Choice
-        {
-            public string text { get; set; }
-            public string? logprobs { get; set; }
-            public string? finish_reason { get; set; }
-        }
+    public class Message
+    {
+        public string role { get; set; }
+        public string content { get; set; }
+    }
+
+    public class Request
+    {
+        public string model { get; set; }
+        public List<Message> Messages { get; set; }
+    }
+    
+    public class CompletionResponse
+    {
+        public Choice[] choices { get; set; }
+    }
+
+    public class Choice
+    {
+        public Message message { get; set; }
+        public string? finish_reason { get; set; }
     }
 }

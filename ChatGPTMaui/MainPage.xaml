@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChatGPTMaui.MainPage">
+
+    <ScrollView>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Entry
+                      
+                          x:Name="txtPrompt"  Margin="10" />
+                <Button Grid.Column="1"  x:Name="btnGenerate" Text="Generate" Margin="10" Clicked="btnGenerate_Click"/>
+            </Grid>
+            <Label  Grid.Row="1"  x:Name="txtGeneratedText" />
+            
+            <ActivityIndicator Grid.Row="2" x:Name="activityIndicator"
+                               Color="Orange" />
+        </Grid>
+    </ScrollView>
+
+</ContentPage>
